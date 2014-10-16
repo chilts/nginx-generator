@@ -1,0 +1,11 @@
+# --- + TEST + ---
+
+# Template variables:
+#
+# * domain = {{{domain}}}
+# * name = {{{name}}}
+# * type = {{{type}}}
+# * confDir = {{{confDir}}}
+# * logDir = {{{logDir}}}
+
+# --- - TEST - ---

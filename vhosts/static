@@ -1,0 +1,21 @@
+# --- + STATIC + ---
+
+# Template variables:
+#
+# * domain = {{{domain}}}
+# * name = {{{name}}}
+# * type = {{{type}}}
+# * dir = {{{dir}}}
+
+server {
+    server_name {{{domain}}};
+    listen 80;
+
+    root {{{dir}}};
+    index index.html index.htm;
+
+    access_log {{{logDir}}}/{{{name}}}-access.log;
+    error_log  {{{logDir}}}/{{{name}}}-error.log;
+}
+
+# --- - STATIC - ---

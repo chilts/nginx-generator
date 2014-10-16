@@ -1,0 +1,113 @@
+#!/usr/bin/env node
+// --------------------------------------------------------------------------------------------- -*- javascript -*- ---
+
+// core
+var fs = require('fs')
+
+// npm
+var xtend = require('xtend')
+var minimist = require('minimist')
+var handlebars = require('handlebars')
+
+// local
+var generator = require('../')
+
+// --------------------------------------------------------------------------------------------------------------------
+
+// var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " +
+//              "{{kids.length}} kids:</p>" +
+//              "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>"
+// var template = handlebars.compile(source)
+
+// var data = { "name": "Alan", "hometown": "Somewhere, TX",
+//              "kids": [{"name": "Jimmy", "age": "12"}, {"name": "Sally", "age": "4"}]}
+// var result = template(data)
+
+// console.log(result)
+
+// --------------------------------------------------------------------------------------------------------------------
+
+var argv = minimist(process.argv.slice(2))
+
+if ( argv.help) {
+  usage()
+}
+
+// make sure we are given the following
+var required = [ 'name', 'type', 'domain' ]
+required.forEach(function(field) {
+  if ( !argv[field] ) {
+    usage('Option \'' + field + '\' should be specified')
+  }
+})
+
+// make sure we have been given one (and only one) filename
+if ( argv._.length === 0 ) {
+  usage('A output filename is required.')
+}
+
+var filename = argv._[0]
+
+// start off with empty data
+var data = {}
+
+// read in the data file if given
+if ( argv.data ) {
+  data = fs.readFileSync(argv.data, { encoding : 'utf8' })
+  data = JSON.parse(data)
+}
+
+// for any var, split it and save it
+if ( argv.var ) {
+  if ( !Array.isArray(argv.var) ) {
+    argv.var = [ argv.var ]
+  }
+}
+else {
+  argv.var = []
+}
+
+argv.var.forEach(function(v) {
+  v = v.split('=')
+  data[v[0]] = v[1]
+})
+
+var conf = generator(
+  argv.domain,
+  argv.name,
+  argv.type,
+  data
+)
+
+if ( filename === '-' ) {
+  console.log(conf)
+}
+else {
+  fs.writeFileSync(filename, conf, { encoding : 'utf8' })
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+
+function usage(msg) {
+  var logFn = msg ? console.warn : console.log
+  if ( msg ) {
+    logFn('Error: ' + msg)
+    logFn()
+  }
+  // logFn('Usage: %s %s --domain <domain> --type <type> --name <name>', process.argv[0], process.argv[1])
+  logFn('Usage: $0 --domain <domain> --type <type> --name <name> <filename>')
+  logFn()
+  logFn('Options:')
+  logFn('    --name <name>      -  the name of this site (will be used in the filename)')
+  logFn('    --domain <domain>  -  the domain name, e.g. chilts.org')
+  logFn('    --type <type>      -  the type of this site (from [proxy, redirect, static]')
+  logFn('    --var name=value   -  a variable to pass to the template')
+  logFn('    --data <filename>  -  a JSON file to read for template variables')
+  logFn()
+  logFn('Copyright 2014 Andrew Chilton <andychilton@gmail.com>.')
+  logFn()
+  logFn('Please report bugs to: https://github.com/chilts/nginx-generator')
+  process.exit(msg ? 2 : 0)
+}
+
+// --------------------------------------------------------------------------------------------------------------------

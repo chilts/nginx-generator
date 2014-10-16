@@ -1,0 +1,27 @@
+# --- + PROXY + ---
+
+# Template variables:
+#
+# * domain = {{{domain}}}
+# * name = {{{name}}}
+# * type = {{{type}}}
+# * host = {{{host}}}
+# * port = {{{port}}}
+
+upstream {{{name}}}-lb {
+    server {{{host}}}:{{{port}}};
+}
+
+server {
+    server_name {{{domain}}};
+    listen 80;
+
+    location / {
+        proxy_pass  http://{{{name}}}-lb;
+    }
+
+    access_log {{{logDir}}}/{{{name}}}-access.log;
+    error_log  {{{logDir}}}/{{{name}}}-error.log;
+}
+
+# --- - PROXY - ---

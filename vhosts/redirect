@@ -1,0 +1,20 @@
+# --- + REDIRECT + ---
+
+# Template variables:
+#
+# * domain = {{{domain}}}
+# * name = {{{name}}}
+# * type = {{{type}}}
+# * to   = {{{to}}}
+
+server {
+    server_name {{{domain}}};
+    listen 80;
+
+    rewrite ^ http://{{{to}}}$uri permanent;
+
+    access_log {{{logDir}}}/{{{name}}}-access.log;
+    error_log  {{{logDir}}}/{{{name}}}-error.log;
+}
+
+# --- - REDIRECT - ---
