@@ -19,13 +19,12 @@ $ nginx-generator \
       --domain www.chilts.org \
       --type redirect \
       --var to=chilts.org \
-      /tmp/org-chilts-www
+      /etc/nginx/sites-enabled/org-chilts-www
 ```
 
-Then copy it into place and reload Nginx:
+Then reload Nginx
 
 ```bash
-$ sudo cp /tmp/cssminifier-com-www /etc/nginx/sites-enabled/
 $ sudo service nginx reload
 ```
 
@@ -38,7 +37,7 @@ $ nginx-generator \
       --domain www.chilts.org \
       --type redirect \
       --data vars.json \
-      /tmp/org-chilts-www
+      /etc/nginx/sites-enabled/org-chilts-www
 ```
 
 To generate a proxy config for `chilts.org` to a server running on `localhost:8000`, do:
@@ -50,7 +49,7 @@ $ nginx-generator \
       --type proxy \
       --var host=localhost \
       --var port=8000 \
-      /tmp/org-chilts
+      /etc/nginx/sites-enabled/org-chilts
 ```
 
 To generate a vhost that will serve a static site:
@@ -61,7 +60,7 @@ $ nginx-generator \
       --domain static-chilts.org \
       --type static \
       --var dir=/home/chilts/htdocs \
-      /tmp/org-chilts-static
+      /etc/nginx/sites-enabled/org-chilts-static
 ```
 
 ## Roadmap ##
