@@ -1,7 +1,37 @@
 {
+  "name": "nginx-generator",
+  "version": "1.0.0",
+  "description": "Generate simple Nginx 'vhosts' with a simple library/cli tool.",
+  "main": "index.js",
+  "bin": {
+    "nginx-generator": "bin/nginx-generator"
+  },
   "dependencies": {
     "handlebars": "^2.0.0",
     "minimist": "^1.1.0",
     "xtend": "^4.0.0"
-  }
+  },
+  "homepage": "https://github.com/chilts/nginx-generator",
+  "bugs": {
+    "url": "https://github.com/chilts/nginx-generator/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chilts/nginx-generator.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Andrew Chilton",
+    "email": "andychilton@gmail.com",
+    "url": "http://chilts.org/"
+  },
+  "keywords": [
+    "nginx",
+    "proxy",
+    "http",
+    "redirect"
+  ],
+  "license": "Apache 2.0"
 }

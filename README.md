@@ -14,80 +14,74 @@ $ npm install -g nginx-generator
 To generate a simple redirect from `www.chilts.org` to `chilts.org`, just do:
 
 ```bash
-$ sudo nginx-generator --type redirect --var from=www.chilts.org --var to=chilts.org www-chilts-org
+$ nginx-generator \
+      --name org-chilts-www \
+      --domain www.chilts.org \
+      --type redirect \
+      --var to=chilts.org \
+      /tmp/org-chilts-www
+```
+
+Then copy it into place and reload Nginx:
+
+```bash
+$ sudo cp /tmp/cssminifier-com-www /etc/nginx/sites-enabled/
+$ sudo service nginx reload
 ```
 
 Your vars can also be read from a JSON file, such as this:
 
 ```bash
-$ echo '{"from":"www.chilts.org","to":"chilts.org"}' > vars.json
-$ sudo nginx-generator --type redirect --data vars.json www-chilts-org
+$ echo '{"to":"chilts.org"}' > vars.json
+$ nginx-generator \
+      --name org-chilts-www \
+      --domain www.chilts.org \
+      --type redirect \
+      --data vars.json \
+      /tmp/org-chilts-www
 ```
 
 To generate a proxy config for `chilts.org` to a server running on `localhost:8000`, do:
 
 ```
-$ 
-$ sudo nginx-generator --type proxy --var 
+$ nginx-generator \
+      --name org-chilts \
+      --domain chilts.org \
+      --type proxy \
+      --var host=localhost \
+      --var port=8000 \
+      /tmp/org-chilts
 ```
 
-```
-var app = express()
-var toSlash = require('express-to-slash')
-
-app.all('/admin', toSlash())
-app.all('/blog', toSlash(301)) // Moved Permanently
-```
-
-This will redirect all `.get()`, `.head()`, `.post()` etc requests to `/admin`. It will also include any querystring
-which was included in the request.
-
-e.g. `/admin?hello=world` will redirect to `/admin/?hello=world`
-
-## 'strict routing' and 'strict'
-
-In Express the default routing means that `/path` and `/path/` map to the same route. I feel that this breaks how the
-web works, espectially if you use relative URLs in your templates. To fix this I think you need to deal with each route
-separately ... and of course in some cases you want to redirect one to the other. In my case, I sometimes redirect the
-non-slash version to the slash version, hence this project.
-
-However, you still have to tell Express to be explicit about this. To do this on your app, you should do the following:
+To generate a vhost that will serve a static site:
 
 ```
-var app = express()
-app.enable('strict routing')
+$ nginx-generator \
+      --name org-chilts-static \
+      --domain static-chilts.org \
+      --type static \
+      --var dir=/home/chilts/htdocs \
+      /tmp/org-chilts-static
 ```
 
-In Express v4, you can now also create routers, but these too need to be told to be explicit about their
-routing. Therefore you should do the following when creating a new router:
+## Roadmap ##
 
-```
-var router = express.Router({
-  'strict' : true,
-})
-```
+* add ability to set and define config for basic auth for any site
+* add ability to make a site serve over https with config for certs
 
-Note: unfortunately the name of the option is different on the app and the router.
+## Other Nginx Packages ##
 
-When using a router, you also need to put the redirect route first so that it is done prior to the other one. The
-reason for this is that usually a route is mounted using `app.use()` and therefore it is classed as middleware. Yet
-Express also tells us that middleware just checks the prefix of the path and is therefore not subject to the final
-slash. Yes, I think this is weird, but it is what it is! Therefore, try this:
+There are some other Nginx packages out there such as:
 
-```
-var express = require('express')
-var toSlash = require('express-to-slash')
-// an express.Router({ 'strict' : true })
-var myAdmin = require('./admin.js')
+* https://www.npmjs.org/package/nginx-vhosts
+* https://www.npmjs.org/package/ngineer
+* https://www.npmjs.org/package/nginx-conf
+* https://www.npmjs.org/package/nodeginx
 
-var app = express()
-app.enable('strict routing')
-
-app.use(toSlash('/admin/'))
-app.use('/admin/', myAdmin)
-```
-
-Phew!
+However, I didn't want to control Nginx itself like `nginx-vhosts` and `ngineer` does, especially on Debian or Ubuntu
+machines since upstart already does this. All I wanted to do was template in some simple vhosts in a programmatic
+(library or CLI program) way. Also, `nginx-conf` is too complicated since that's for the main Nginx config. `nodeginx`
+is closest to this package in terms of functionality.
 
 ## AUTHOR ##
 
