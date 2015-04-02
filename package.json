@@ -1,6 +1,6 @@
 {
   "name": "nginx-generator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate simple Nginx 'vhosts' with a simple library/cli tool.",
   "main": "index.js",
   "bin": {
