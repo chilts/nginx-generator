@@ -40,7 +40,10 @@ $ nginx-generator \
       /etc/nginx/sites-enabled/org-chilts-www
 ```
 
-To generate a proxy config for `chilts.org` to a server running on `localhost:8000`, do:
+## Proxy ##
+
+To generate a proxy that will forward requests elsewhere, just pass the usual three `--name`, `--domain` and `--type`
+then pass both `host` and `port` as `--var` variables:
 
 ```
 $ nginx-generator \
@@ -52,7 +55,10 @@ $ nginx-generator \
       /etc/nginx/sites-enabled/org-chilts
 ```
 
-To generate a vhost that will serve a static site:
+## Static Site ##
+
+To generate a vhost that will serve a static site, just pass the usual three `--name`, `--domain` and `--type` then
+pass `dir` as a `--var`:
 
 ```
 $ nginx-generator \
@@ -61,6 +67,19 @@ $ nginx-generator \
       --type static \
       --var dir=/home/chilts/htdocs \
       /etc/nginx/sites-enabled/org-chilts-static
+```
+
+## Redirect ##
+
+To generate a redirect, just pass the usual three `--name`, `--domain` and `--type` then pass `to` as a `--var`:
+
+```bash
+$ nginx-generator \
+      --name org-chilts-www \
+      --domain www.chilts.org \
+      --type redirect \
+      --var to=chilts.org \
+      /etc/nginx/sites-enabled/org-chilts-www
 ```
 
 ## Roadmap ##
