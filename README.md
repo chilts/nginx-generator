@@ -1,7 +1,8 @@
 # nginx-generator #
 
-Easy simple way to create Nginx vhost files for fairly simple sites, such as a proxy to a Node.js server,
-a redirect from one domain to another, or simply serving a static site.
+Easy simple way to create Nginx vhost files for fairly simple sites, such as a proxy to a Node.js server, a redirect
+from one domain to another, serving a static site or setting up a config to serve multiple static sites from one
+directory.
 
 ## Synopsis ##
 
@@ -80,6 +81,30 @@ $ nginx-generator \
       --type redirect \
       --var to=chilts.org \
       /etc/nginx/sites-enabled/org-chilts-www
+```
+
+## Catchall (for multiple static sites) ##
+
+To generate a catchall for multiple static sites, create a directory which will hold all of the sites, then create a
+directory for each site, named after the host it will serve. For example, this will serve `example.com`, `chilts.org`
+and `nodejs.nz`:
+
+```sh
+$ mkdir /var/lib/sites
+$ mkdir /var/lib/sites/example.com
+$ mkdir /var/lib/sites/chilts.org
+$ mkdir /var/lib/sites/nodejs.nz
+```
+
+Then, create this special vhost config:
+
+```bash
+$ nginx-generator \
+      --name vhost \
+      --domain _ \
+      --type vhost \
+      --var dir=/var/lib/sites \
+      /etc/nginx/sites-enabled/vhost
 ```
 
 ## Roadmap ##

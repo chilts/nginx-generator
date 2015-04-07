@@ -53,6 +53,12 @@ var types = {
       // dir - required
     },
   },
+  vhost : {
+    template : fs.readFileSync(path.join(dir, 'vhost'), { encoding : 'utf8' }),
+    defaults : {
+      // dir -- required
+    },
+  },
   test  : {
     template : fs.readFileSync(path.join(dir, 'test'), { encoding : 'utf8' }),
     defaults : {},
